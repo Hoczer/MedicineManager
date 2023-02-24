@@ -3,9 +3,9 @@
     public class Diet
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Amount { get; set; }
+        public string FoodName { get; set; }
+        public string FoodDescription { get; set; }
+        public int FoodAmount { get; set; }
         public DateTime WhenToEat { get; set; }
     }
 }

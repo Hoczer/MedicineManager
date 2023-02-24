@@ -41,14 +41,14 @@ namespace MedicineManagerAPI.Entities
             modelBuilder.Entity<Treatment>(t =>
             {
 
-                t.Property(e => e.WhenToTake).HasDefaultValue(DateTime.Now);
-                t.Property(e=>e.WasTaken).HasDefaultValue(false);
+                t.Property(e => e.MedWhenToTake).HasDefaultValue(DateTime.Now);
+                t.Property(e=>e.MedWasTaken).HasDefaultValue(false);
             });
 
             modelBuilder.Entity<MedicineCabinet>(d =>
             {
 
-                d.Property(e => e.ExpirationDate).HasDefaultValue(DateTime.Now.AddDays(30) ) ;
+                d.Property(e => e.MedExpirationDate).HasDefaultValue(DateTime.Now.AddDays(30) ) ;
             });
 
             modelBuilder.Entity<Role>(r =>

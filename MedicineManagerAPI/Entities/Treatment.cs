@@ -3,10 +3,10 @@
     public class Treatment
     {
         public int Id { get; set; }
-        public string Medicine { get; set; }
-        public int Amount { get; set; }
-        public DateTime WhenToTake { get; set; }
-        public bool WasTaken { get; set; }
+        public string MedName { get; set; }
+        public int MedAmount { get; set; }
+        public DateTime MedWhenToTake { get; set; }
+        public bool MedWasTaken { get; set; }
 
         public Patient Patient { get; set; }
         public int PatientId { get; set; }
