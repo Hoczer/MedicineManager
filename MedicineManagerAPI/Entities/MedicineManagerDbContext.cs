@@ -36,6 +36,7 @@ namespace MedicineManagerAPI.Entities
             modelBuilder.Entity<Patient>(d =>
             {
                 d.HasOne(t=> t.Treatment).WithOne(p=> p.Patient).HasForeignKey<Treatment>(t=>t.PatientId);
+                d.HasOne(d => d.Diet).WithOne(p => p.Patient).HasForeignKey<Diet>(p => p.PatientId);
             });
 
             modelBuilder.Entity<Treatment>(t =>

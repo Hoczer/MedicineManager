@@ -12,22 +12,6 @@ namespace MedicineManagerAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Diet",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    WhenToEat = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 2, 17, 20, 39, 42, 656, DateTimeKind.Local).AddTicks(7233))
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Diet", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -44,7 +28,8 @@ namespace MedicineManagerAPI.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -66,12 +51,14 @@ namespace MedicineManagerAPI.Migrations
                 name: "MedicineCabinets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 3, 19, 20, 39, 42, 657, DateTimeKind.Local).AddTicks(4487)),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MedDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MedExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 3, 27, 14, 51, 8, 47, DateTimeKind.Local).AddTicks(6580)),
+                    MedAmount = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +79,9 @@ namespace MedicineManagerAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TreatmentID = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TreatmentID = table.Column<int>(type: "int", nullable: false),
+                    DietID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,15 +95,38 @@ namespace MedicineManagerAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Diet",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FoodName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FoodDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FoodAmount = table.Column<int>(type: "int", nullable: false),
+                    WhenToEat = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 2, 25, 14, 51, 8, 46, DateTimeKind.Local).AddTicks(2917)),
+                    PatientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Diet_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Treatments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Medicine = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    WhenToTake = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 2, 17, 20, 39, 42, 657, DateTimeKind.Local).AddTicks(3936)),
-                    WasTaken = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    MedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MedAmount = table.Column<int>(type: "int", nullable: false),
+                    MedWhenToTake = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 2, 25, 14, 51, 8, 47, DateTimeKind.Local).AddTicks(6017)),
+                    MedWasTaken = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     PatientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -128,6 +139,12 @@ namespace MedicineManagerAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Diet_PatientId",
+                table: "Diet",
+                column: "PatientId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicineCabinets_UserId",

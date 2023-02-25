@@ -1,14 +1,11 @@
-﻿namespace MedicineManagerAPI.Entities
+﻿namespace MedicineManagerAPI.Models
 {
-    public class Diet
+    public class DietDto
     {
         public int Id { get; set; }
         public string FoodName { get; set; }
         public string FoodDescription { get; set; }
         public int FoodAmount { get; set; }
         public DateTime WhenToEat { get; set; }
-
-        public Patient Patient { get; set; }
-        public int PatientId { get; set; }
     }
 }

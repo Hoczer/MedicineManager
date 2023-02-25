@@ -12,11 +12,13 @@ using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using MedicineManagerAPI.Middleware;
 using MedicineManagerAPI.Models.Validators;
+using MedicineManagerAPI.Authorization;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
-
+builder.Services.AddSingleton(authenticationSettings);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,6 +32,11 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IMedicineCabinetService, MedicineCabinetService>();
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler >();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = "Bearer";
@@ -47,7 +54,7 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
-builder.Services.AddSingleton(authenticationSettings);
+
 
 
 var app = builder.Build();

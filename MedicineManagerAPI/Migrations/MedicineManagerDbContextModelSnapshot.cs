@@ -39,21 +39,32 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<string>("FoodName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("WhenToEat")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 2, 24, 16, 58, 58, 346, DateTimeKind.Local).AddTicks(5897));
+                        .HasDefaultValue(new DateTime(2023, 2, 25, 14, 51, 8, 46, DateTimeKind.Local).AddTicks(2917));
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
 
                     b.ToTable("Diet");
                 });
 
             modelBuilder.Entity("MedicineManagerAPI.Entities.MedicineCabinet", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<int>("MedAmount")
                         .HasColumnType("int");
@@ -64,13 +75,13 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<DateTime>("MedExpirationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 3, 26, 16, 58, 58, 347, DateTimeKind.Local).AddTicks(2614));
+                        .HasDefaultValue(new DateTime(2023, 3, 27, 14, 51, 8, 47, DateTimeKind.Local).AddTicks(6580));
 
                     b.Property<string>("MedName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -88,6 +99,9 @@ namespace MedicineManagerAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DietID")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
@@ -97,8 +111,8 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<int>("TreatmentID")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -129,7 +143,7 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<DateTime>("MedWhenToTake")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 2, 24, 16, 58, 58, 347, DateTimeKind.Local).AddTicks(2112));
+                        .HasDefaultValue(new DateTime(2023, 2, 25, 14, 51, 8, 47, DateTimeKind.Local).AddTicks(6017));
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -144,9 +158,11 @@ namespace MedicineManagerAPI.Migrations
 
             modelBuilder.Entity("MedicineManagerAPI.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -190,6 +206,17 @@ namespace MedicineManagerAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("MedicineManagerAPI.Entities.Diet", b =>
+                {
+                    b.HasOne("MedicineManagerAPI.Entities.Patient", "Patient")
+                        .WithOne("Diet")
+                        .HasForeignKey("MedicineManagerAPI.Entities.Diet", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("MedicineManagerAPI.Entities.MedicineCabinet", b =>
@@ -238,6 +265,8 @@ namespace MedicineManagerAPI.Migrations
 
             modelBuilder.Entity("MedicineManagerAPI.Entities.Patient", b =>
                 {
+                    b.Navigation("Diet");
+
                     b.Navigation("Treatment");
                 });
 

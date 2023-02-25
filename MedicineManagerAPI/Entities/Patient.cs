@@ -7,9 +7,12 @@
         public string LastName { get; set; }
 
         public User User { get; set; }
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
 
         public Treatment Treatment { get; set; }
         public int TreatmentID { get; set; }
+
+        public Diet Diet { get; set; }
+        public int DietID { get; set; }
     }
 }
