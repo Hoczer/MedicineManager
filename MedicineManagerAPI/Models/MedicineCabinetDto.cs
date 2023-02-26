@@ -2,7 +2,7 @@
 {
     public class MedicineCabinetDto
     {
-        public int Id { get; set; }
+      //  public int Id { get; set; }
         public string MedName { get; set; }
         public string MedDescription { get; set; }
         public DateTime MedExpirationDate { get; set; }

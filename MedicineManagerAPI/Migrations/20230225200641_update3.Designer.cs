@@ -4,6 +4,7 @@ using MedicineManagerAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicineManagerAPI.Migrations
 {
     [DbContext(typeof(MedicineManagerDbContext))]
-    partial class MedicineManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230225200641_update3")]
+    partial class update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<DateTime>("WhenToEat")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 2, 25, 21, 54, 3, 741, DateTimeKind.Local).AddTicks(4434));
+                        .HasDefaultValue(new DateTime(2023, 2, 25, 21, 6, 41, 22, DateTimeKind.Local).AddTicks(5402));
 
                     b.HasKey("Id");
 
@@ -72,7 +75,7 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<DateTime>("MedExpirationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 3, 27, 21, 54, 3, 744, DateTimeKind.Local).AddTicks(3216));
+                        .HasDefaultValue(new DateTime(2023, 3, 27, 21, 6, 41, 27, DateTimeKind.Local).AddTicks(4603));
 
                     b.Property<string>("MedName")
                         .HasColumnType("nvarchar(max)");
@@ -82,7 +85,8 @@ namespace MedicineManagerAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MedicineCabinets");
                 });
@@ -139,7 +143,7 @@ namespace MedicineManagerAPI.Migrations
                     b.Property<DateTime>("MedWhenToTake")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 2, 25, 21, 54, 3, 744, DateTimeKind.Local).AddTicks(2100));
+                        .HasDefaultValue(new DateTime(2023, 2, 25, 21, 6, 41, 27, DateTimeKind.Local).AddTicks(3297));
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -218,8 +222,8 @@ namespace MedicineManagerAPI.Migrations
             modelBuilder.Entity("MedicineManagerAPI.Entities.MedicineCabinet", b =>
                 {
                     b.HasOne("MedicineManagerAPI.Entities.User", "User")
-                        .WithMany("Cabinet")
-                        .HasForeignKey("UserId")
+                        .WithOne("Cabinet")
+                        .HasForeignKey("MedicineManagerAPI.Entities.MedicineCabinet", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -14,7 +14,7 @@ namespace MedicineManagerAPI.Entities
         public int RoleId { get; set; }
 
         public virtual Role Role { get; set; }
-        public MedicineCabinet Cabinet { get; set; }
+        public List<MedicineCabinet> Cabinet { get; set; }
 
         public List<Patient> Patients { get; set; } = new List<Patient>();
     }

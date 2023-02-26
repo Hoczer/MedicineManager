@@ -15,7 +15,7 @@ namespace MedicineManagerAPI.Authorization
             }
 
             var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            if (medicineCabinet.CreatedById == int.Parse(userId))
+            if (medicineCabinet.UserId == int.Parse(userId))
             {
                 context.Succeed(requirement);
             }

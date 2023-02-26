@@ -23,7 +23,7 @@ namespace MedicineManagerAPI.Entities
             {
                 u.Property(e => e.Email).IsRequired();
                 u.Property(e => e.RoleId).HasDefaultValue(1);
-                u.HasOne(c => c.Cabinet).WithOne(us => us.User).HasForeignKey<MedicineCabinet>(m => m.UserId);
+                u.HasMany(c => c.Cabinet).WithOne(us => us.User).HasForeignKey(m => m.UserId);
                 u.HasMany(p => p.Patients).WithOne(u=> u.User).HasForeignKey(p => p.UserId);
             });
 

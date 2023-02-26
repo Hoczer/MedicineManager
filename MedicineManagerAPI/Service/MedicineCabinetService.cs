@@ -23,7 +23,7 @@ namespace MedicineManagerAPI.Service
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authorizationService;
         public MedicineCabinetService(MedicineManagerDbContext context, IMapper mapper,
-            ILogger<MedicineCabinetService> logger,IAuthorizationService authorizationService, IUserContextService userContextService)
+            ILogger<MedicineCabinetService> logger, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _context = context;
             _mapper = mapper;
@@ -37,7 +37,8 @@ namespace MedicineManagerAPI.Service
         public int Create(CreateMedicineDto dto)
         {
             var medicineCabinet = _mapper.Map<MedicineCabinet>(dto);
-            medicineCabinet.CreatedById = _userContextService.GetUserId;
+            
+            medicineCabinet.UserId = _userContextService.GetIntUserID();
             _context.MedicineCabinets.Add(medicineCabinet);
             _context.SaveChanges();
             return medicineCabinet.Id;
