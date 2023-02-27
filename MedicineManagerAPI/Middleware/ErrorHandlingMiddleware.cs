@@ -26,6 +26,7 @@ namespace MedicineManagerAPI.Middleware
             catch (ForbidException forbidException)
             {
                 context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(forbidException.Message);
             }
             catch (BadRequestException badRequestException)
             {

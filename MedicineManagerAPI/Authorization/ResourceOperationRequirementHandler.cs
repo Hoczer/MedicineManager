@@ -8,12 +8,11 @@ namespace MedicineManagerAPI.Authorization
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, MedicineCabinet medicineCabinet)
         {
-            if (requirement.ResourceOperation == ResourceOperation.Read ||
-                requirement.ResourceOperation == ResourceOperation.Create)
+            if (requirement.ResourceOperation == ResourceOperation.Create)
             {
                 context.Succeed(requirement);
             }
-
+            
             var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
             if (medicineCabinet.UserId == int.Parse(userId))
             {

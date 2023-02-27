@@ -28,13 +28,19 @@ namespace MedicineManagerAPI.Controllers
 
             return Created($"/api/medicineCabinet/{id}", null);
         }
+
         [HttpGet("{id}")]
         public ActionResult<MedicineCabinetDto> Get([FromRoute] int id)
         {
             var medicine = _medicineCabinetService.GetById(id);
             return Ok(medicine);
         }
-        //TODO: Action GET ALL goes here
+        [HttpGet]
+        public ActionResult<List<MedicineCabinetDto>> GetAll()
+        {
+            var medicine = _medicineCabinetService.GetAll();
+            return Ok(medicine);
+        }
 
         [HttpPut("{id}")]
         public ActionResult Update ([FromBody] UpdateMedicine dto, [FromRoute] int id)

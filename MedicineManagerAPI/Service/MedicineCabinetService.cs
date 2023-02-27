@@ -14,6 +14,8 @@ namespace MedicineManagerAPI.Service
         //GetAll;
         public void Update(int id, UpdateMedicine dto);
         public void Delete(int id);
+        public List<MedicineCabinetDto> GetAll();
+
     }
     public class MedicineCabinetService : IMedicineCabinetService
     {
@@ -54,11 +56,26 @@ namespace MedicineManagerAPI.Service
             {
                 throw new NotFoundException("Medicine not found");
             }
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, medicine,
+                new ResourceOperationRequirement(ResourceOperation.Read)).Result;
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException("Action Forbid");
+            }
             var medicineDto = _mapper.Map<MedicineCabinetDto>(medicine);
             return medicineDto;
         }
-
-        //TODO: Get All method
+        /// <summary>
+        /// Method <c>GetAll</c> Returns Medicine List from Medicine Cabinet filter by Clims UserID.
+        /// </summary>
+        public List<MedicineCabinetDto> GetAll()
+        {
+            var UId = _userContextService.GetIntUserID();
+            var medicine=_context.MedicineCabinets.Where(i=>i.UserId==UId).ToList();
+            var medicinedto = _mapper.Map<List<MedicineCabinetDto>>(medicine);
+            return medicinedto;
+        }
 
         /// <summary>
         /// Method <c>Update</c> Modify existing Med in Medicine Cabinet .
@@ -76,7 +93,7 @@ namespace MedicineManagerAPI.Service
 
             if (!authorizationResult.Succeeded)
             {
-                throw new ForbidException();
+                throw new ForbidException("Action Forbid");
             }
             //end of authorization
             medicine.MedName = dto.MedName;
@@ -104,7 +121,7 @@ namespace MedicineManagerAPI.Service
 
             if (!authorizationResult.Succeeded)
             {
-                throw new ForbidException();
+                throw new ForbidException("Action Forbid");
             }
             //end of authorization
             _context.MedicineCabinets.Remove(medicine);
