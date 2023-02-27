@@ -7,5 +7,6 @@
         public string MedDescription { get; set; }
         public DateTime MedExpirationDate { get; set; }
         public int MedAmount { get; set; }
+        public int UserId { get; set; }
     }
 }

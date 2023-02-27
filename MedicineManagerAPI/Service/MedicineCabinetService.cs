@@ -4,6 +4,9 @@ using MedicineManagerAPI.Entities;
 using MedicineManagerAPI.Exceptions;
 using MedicineManagerAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Linq.Expressions;
 
 namespace MedicineManagerAPI.Service
 {
@@ -14,7 +17,7 @@ namespace MedicineManagerAPI.Service
         //GetAll;
         public void Update(int id, UpdateMedicine dto);
         public void Delete(int id);
-        public List<MedicineCabinetDto> GetAll();
+        public PagedResult<MedicineCabinetDto> GetAll(MedicineCabinetQuery query);
 
     }
     public class MedicineCabinetService : IMedicineCabinetService
@@ -69,12 +72,47 @@ namespace MedicineManagerAPI.Service
         /// <summary>
         /// Method <c>GetAll</c> Returns Medicine List from Medicine Cabinet filter by Clims UserID.
         /// </summary>
-        public List<MedicineCabinetDto> GetAll()
+        public PagedResult<MedicineCabinetDto> GetAll(MedicineCabinetQuery query)
         {
             var UId = _userContextService.GetIntUserID();
-            var medicine=_context.MedicineCabinets.Where(i=>i.UserId==UId).ToList();
-            var medicinedto = _mapper.Map<List<MedicineCabinetDto>>(medicine);
-            return medicinedto;
+
+            var baseQuery = _context
+            .MedicineCabinets
+                .Where(r => query.SearchPhrase == null || (r.MedName.ToLower().Contains(query.SearchPhrase.ToLower())
+                                                           || r.MedDescription.ToLower()
+                                                               .Contains(query.SearchPhrase.ToLower()))&&r.UserId == UId);
+
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelectors = new Dictionary<string, Expression<Func<MedicineCabinet, object>>>
+                {
+                    { nameof(MedicineCabinet.MedName), r => r.MedName },
+                    { nameof(MedicineCabinet.MedDescription), r => r.MedDescription },
+                    { nameof(MedicineCabinet.MedExpirationDate), r => r.MedExpirationDate },
+                };
+
+                var selectedColumn = columnsSelectors[query.SortBy];
+
+                baseQuery = query.SortDirection == SortDirection.ASC
+                    ? baseQuery.OrderBy(selectedColumn)
+                : baseQuery.OrderByDescending(selectedColumn);
+            }
+            var meds = baseQuery
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .ToList();
+
+            var totalItemsCount = baseQuery.Count();
+            var medsDtos = _mapper.Map<List<MedicineCabinetDto>>(meds);
+            var result = new PagedResult<MedicineCabinetDto>(medsDtos, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
+
+            
+            //var medicine=_context.MedicineCabinets.Where(i=>i.UserId==UId).ToList();
+            //var medicinedto = _mapper.Map<List<MedicineCabinetDto>>(medicine);
+            //return medicinedto;
         }
 
         /// <summary>

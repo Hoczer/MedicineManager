@@ -36,9 +36,9 @@ namespace MedicineManagerAPI.Controllers
             return Ok(medicine);
         }
         [HttpGet]
-        public ActionResult<List<MedicineCabinetDto>> GetAll()
+        public ActionResult<List<MedicineCabinetDto>> GetAll([FromQuery]MedicineCabinetQuery query)
         {
-            var medicine = _medicineCabinetService.GetAll();
+            var medicine = _medicineCabinetService.GetAll(query);
             return Ok(medicine);
         }
 

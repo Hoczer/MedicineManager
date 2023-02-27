@@ -32,6 +32,8 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<MedicineCabinetQuery>, MedicineCabinetQueryValidator>();
+
 builder.Services.AddScoped<IMedicineCabinetService, MedicineCabinetService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler >();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
