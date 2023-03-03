@@ -18,6 +18,7 @@ namespace MedicineManagerAPI.Service
         public void Update(int id, UpdateMedicine dto);
         public void Delete(int id);
         public PagedResult<MedicineCabinetDto> GetAll(MedicineCabinetQuery query);
+        public List<MedicineCabinetDto> GetAllDebag();
 
     }
     public class MedicineCabinetService : IMedicineCabinetService
@@ -164,6 +165,13 @@ namespace MedicineManagerAPI.Service
             //end of authorization
             _context.MedicineCabinets.Remove(medicine);
             _context.SaveChanges();
+        }
+
+        public List<MedicineCabinetDto> GetAllDebag()
+        {
+            var medicine=_context.MedicineCabinets.ToList();
+            var medicinedto = _mapper.Map<List<MedicineCabinetDto>>(medicine);
+            return medicinedto;
         }
     }
 }

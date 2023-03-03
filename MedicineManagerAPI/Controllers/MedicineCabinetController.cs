@@ -55,5 +55,12 @@ namespace MedicineManagerAPI.Controllers
             _medicineCabinetService.Delete(id);
             return NoContent();
         }
+        [HttpGet("/getalldebag")]
+        [AllowAnonymous]
+        public ActionResult<List<MedicineCabinetDto>> GetAllDebag()
+        {
+            var medicine = _medicineCabinetService.GetAllDebag();
+            return Ok(medicine);
+        }
     }
 }

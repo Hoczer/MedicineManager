@@ -55,6 +55,7 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
     };
 });
+builder.Services.AddCors();
 
 
 
@@ -69,11 +70,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseResponseCaching();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 app.MapControllers();
 seeder.Seed();
 app.Run();
