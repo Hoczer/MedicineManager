@@ -22,8 +22,8 @@ namespace MedicineManagerAPI.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody] LoginDto dto)
         {
-            var JwtKey = _accountService.GenerateJwt(dto);
-            return Ok(JwtKey);
+            var logedUser = _accountService.LoginUser(dto);
+            return Ok(logedUser);
         }
     }
 }

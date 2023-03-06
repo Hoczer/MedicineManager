@@ -13,7 +13,7 @@ namespace MedicineManagerAPI.Service
     public interface IAccountService
     {
         void RegisterUser(RegisterUserDto dto);
-        string GenerateJwt(LoginDto dto);
+        LogedUserDTO LoginUser(LoginDto dto);
     }
     public class AccountService : IAccountService
     {
@@ -40,7 +40,7 @@ namespace MedicineManagerAPI.Service
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }
-        public string GenerateJwt(LoginDto dto)
+        public LogedUserDTO LoginUser(LoginDto dto)
         {
             var user = _context.Users
                 .Include(u => u.Role)
@@ -78,7 +78,10 @@ namespace MedicineManagerAPI.Service
                 signingCredentials: cred);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+            var logedUser = new LogedUserDTO();
+            logedUser.UserLogin = dto.Email;
+            logedUser.Token = tokenHandler.WriteToken(token);
+            return logedUser;
         }
 
 
